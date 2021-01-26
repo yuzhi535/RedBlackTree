@@ -23,3 +23,8 @@
         - rotateLeft(Node* node) -> node*
         - rotateRight(Node* node) -> node*
         - flipColors(Node* node)
+- red black tree
+    - 成员
+        - root
+    - 操作
+        - 添加新的节点
