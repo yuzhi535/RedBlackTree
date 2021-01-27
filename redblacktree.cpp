@@ -29,13 +29,13 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 
 	// deal with special conditions
 	// in this order!!!
-	if (!node->getLchild()->isRed() && node->getRchild()->isRed()) {
+	if (!isRed(node->getLchild()) && isRed(node->getRchild())) {
 		node = rotateLeft(node);
 	}
-	if (node->getLchild()->isRed() && node->getLchild()->getLchild()->isRed()) {
+	if (isRed(node->getLchild()) && isRed(node->getLchild()->getLchild())) {
 		node = rotateRight(node);
 	}
-	if (node->getRchild()->isRed() && node->getLchild()->isRed()) {
+	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
 		flipColors(node);
 	}
 
@@ -54,9 +54,9 @@ Node::Node(Key k, Value val, Color col) {
 	this->lchild = this->rchild = nullptr;
 }
 
-bool Node::isRed() {
-	if (this == nullptr) return 0;
-	return this->color == Color::RED;
+bool isRed(Node *root) {
+	if (root == nullptr) return false;
+	return root->color == Color::RED;
 }
 
 /**

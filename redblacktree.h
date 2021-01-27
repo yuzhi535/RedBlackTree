@@ -29,12 +29,12 @@ class Node {
 
 	friend void flipColors(Node *root);
 
+	friend bool isRed(Node* root);
 public:
 	explicit Node(Key k, Value val, Color col);
 
 	~Node() = default;
 
-	bool isRed();
 
 	Value getVal() { return this->value; }
 
