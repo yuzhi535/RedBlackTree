@@ -4,10 +4,9 @@
 
 #include "redblacktree.h"
 
-Node *RedBlackTree::put(Key k, Value val) {
+void RedBlackTree::put(Key k, Value val) {
 	root = put(this->root, k, val);
 	root->setColor(Color::BLACK);
-	return root;
 }
 
 RedBlackTree::RedBlackTree(Node *t) {
@@ -49,6 +48,7 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 		node = rotateRight(node);
 	}
 #ifdef DEV
+	// 分裂四叉树
 	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
 		flipColors(node);
 	}
@@ -76,40 +76,41 @@ bool isRed(Node *root) {
 
 /**
  * @brief 翻转颜色
- * @param root
+ * @param h
  */
-void flipColors(Node *root) {
-	root->color = Color::RED;
-	root->lchild->color = Color::BLACK;
-	root->rchild->color = Color::BLACK;
+void flipColors(Node *h) {
+	Node *arr[3] = {h, h->lchild, h->rchild};
+	for (auto t : arr) {
+		t->color = t->color ? Color::BLACK : Color::RED;
+	}
 }
 
 /**
  * @brief 左旋
- * @param root
+ * @param h
  * @return
  */
-Node *rotateLeft(Node *root) {
-	auto x = root->rchild;
-	root->rchild = x->lchild;
-	x->lchild = root;
-	x->color = root->color;
-	root->color = Color::RED;
+Node *rotateLeft(Node *h) {
+	auto x = h->rchild;
+	h->rchild = x->lchild;
+	x->lchild = h;
+	x->color = h->color;
+	h->color = Color::RED;
 	return x;
 }
 
 
 /**
  * @brief 右旋
- * @param root
+ * @param h
  * @return
  */
-Node *rotateRight(Node *root) {
-	auto x = root->lchild;
-	root->lchild = x->rchild;
-	x->rchild = root;
-	x->color = root->color;
-	root->color = Color::RED;
+Node *rotateRight(Node *h) {
+	auto x = h->lchild;
+	h->lchild = x->rchild;
+	x->rchild = h;
+	x->color = h->color;
+	h->color = Color::RED;
 	return x;
 }
 

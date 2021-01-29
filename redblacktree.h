@@ -23,11 +23,11 @@ class Node;
  * @brief basic node. implement rotate, flip and so on.
  */
 class Node {
-	friend Node *rotateLeft(Node *root);
+	friend Node *rotateLeft(Node *h);
 
-	friend Node *rotateRight(Node *root);
+	friend Node *rotateRight(Node *h);
 
-	friend void flipColors(Node *root);
+	friend void flipColors(Node *h);
 
 	friend bool isRed(Node *root);
 
@@ -76,7 +76,7 @@ public:
 
 	~RedBlackTree() = default;
 
-	Node *put(Key k, Value val);
+	void put(Key k, Value val);
 
 private:
 	Node *root;

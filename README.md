@@ -30,4 +30,6 @@
         - 添加新的节点
         - 删除节点
 
+![image-20210129181639099](/home/sasuke/.config/Typora/typora-user-images/image-20210129181639099.png)
+
 # 红黑树牛逼!!!
