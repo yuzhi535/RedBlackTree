@@ -29,12 +29,12 @@ class Node {
 
 	friend void flipColors(Node *root);
 
+	friend bool isRed(Node *root);
+
 public:
 	explicit Node(Key k, Value val, Color col);
 
 	~Node() = default;
-
-	bool isRed();
 
 	Value getVal() { return this->value; }
 
@@ -56,6 +56,8 @@ public:
 
 	void setColor(Color col) { this->color = col; }
 
+	Color getColor() { return this->color; }
+
 private:
 	Value value;
 	Color color;
@@ -63,10 +65,14 @@ private:
 	Node *lchild, *rchild;
 };
 
+/**
+ * @brief
+ * @todo implement the deletion
+ */
 class RedBlackTree {
 public:
 
-	RedBlackTree(Node *t);
+	explicit RedBlackTree(Node *t);
 
 	~RedBlackTree() = default;
 
@@ -76,7 +82,6 @@ private:
 	Node *root;
 
 	Node *put(Node *node, Key k, Value val);
-
 };
 
 

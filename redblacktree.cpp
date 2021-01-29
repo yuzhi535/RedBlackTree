@@ -14,30 +14,45 @@ RedBlackTree::RedBlackTree(Node *t) {
 	this->root = t;
 }
 
+/**
+ * @brief insert the node
+ * @param node
+ * @param k
+ * @param val
+ * @return
+ */
 Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	if (node == nullptr) {
 		return new Node(k, val, Color::RED);
+	}
+#define DEV
+#ifndef DEV
+	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
+		flipColors(node);
+	}
+#endif
+
+	if (isEqualTo(k, node->getKey()) == -1) {
+		node->setLchild(put(node->getLchild(), k, val));
+	} else if (isEqualTo(k, node->getKey()) == 1) {
+		node->setRchild(put(node->getRchild(), k, val));
 	} else {
-		if (isEqualTo(k, node->getKey()) == -1) {
-			node->setLchild(put(node->getLchild(), k, val));
-		} else if (isEqualTo(k, node->getKey()) == 1) {
-			node->setRchild(put(node->getRchild(), k, val));
-		} else {
-			node->setVal(val);
-		}
+		node->setVal(val);
 	}
 
 	// deal with special conditions
 	// in this order!!!
-	if (!node->getLchild()->isRed() && node->getRchild()->isRed()) {
+	if (!isRed(node->getLchild()) && isRed(node->getRchild())) {
 		node = rotateLeft(node);
 	}
-	if (node->getLchild()->isRed() && node->getLchild()->getLchild()->isRed()) {
+	if (isRed(node->getLchild()) && isRed(node->getLchild()->getLchild())) {
 		node = rotateRight(node);
 	}
-	if (node->getRchild()->isRed() && node->getLchild()->isRed()) {
+#ifdef DEV
+	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
 		flipColors(node);
 	}
+#endif
 
 	return node;
 }
@@ -54,9 +69,9 @@ Node::Node(Key k, Value val, Color col) {
 	this->lchild = this->rchild = nullptr;
 }
 
-bool Node::isRed() {
-	if (this == nullptr) return 0;
-	return this->color == Color::RED;
+bool isRed(Node *root) {
+	if (root == nullptr) return false;
+	return root->color == Color::RED;
 }
 
 /**
