@@ -36,7 +36,7 @@ public:
 
 	~Node() = default;
 
-	Value getVal() { return this->value; }
+	Value getVal() const { return this->value; }
 
 	void setVal(Value val) { this->value = val; }
 
@@ -48,7 +48,7 @@ public:
 		this->rchild = child;
 	}
 
-	Key getKey() { return this->key; }
+	Key getKey() const { return this->key; }
 
 	Node *getLchild() { return this->lchild; }
 
