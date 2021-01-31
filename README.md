@@ -30,7 +30,18 @@
     - 操作
         - 添加新的节点
         - 删除节点
-
-![image-20210129181639099](./images/image-20210129181639099.png)
+    - 插入节点的总体情况：![image-2021012918163909](./images/image-20210129181639099.png)
+    - 删除节点
+        - 简单的删除最大值节点： 那个最大值正好存在红色父节点的左孩子
+        - 简单的删除最小值节点： 最小值节点恰好为红色
+        - 难点（自己制造红色节点）
+            - 删除最大值节点: ![image-rotateRight](./images/deletemax1.png)
+              ![image-rotateRight](./images/deletemax2.png)
+            - 删除最小之节点: ![image-rotateLeft](./images/deletemin1.png)
+              ![image-rotateLeft](./images/deletemin2.png)
+            - 删除节点的原则： 当前节点或者孩子节点至少有一个为红色
+            - 如果不满足上述原则
+                - ![img_delete](./images/delete1.png)
+                - ![img_delete](./images/delete2.png)
 
 # 红黑树牛逼!!!

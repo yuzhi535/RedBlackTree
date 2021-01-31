@@ -63,7 +63,12 @@ Node *rotateRight(Node *root) {
 	return x;
 }
 
-Node *moveRedRight(Node *h) {
+/**
+ * @brief 把左边的红色移到右边
+ * @param h
+ * @return
+ */
+Node *moveRedToRight(Node *h) {
 	flipColors(h);
 	if (isRed(h->getLchild()->getLchild())) {
 		h = rotateRight(h);
@@ -72,7 +77,12 @@ Node *moveRedRight(Node *h) {
 	return h;
 }
 
-Node *moveRedLeft(Node *h) {
+/**
+ * @brief 把右边的红的移到左边
+ * @param h
+ * @return
+ */
+Node *moveRedToLeft(Node *h) {
 	flipColors(h);
 	if (isRed(h->getRchild()->getLchild())) {
 		h->setRchild(rotateRight(h->getRchild()));
@@ -93,7 +103,7 @@ int isEqualTo(Key k1, Key k2) {
 }
 
 /**
- * @brief to fix up the node to the standard llrb
+ * @brief to fix up the node to the standard left leaning red black tree
  * @param h
  * @return
  */
@@ -137,8 +147,8 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	if (node == nullptr) {
 		return new Node(k, val, Color::RED);
 	}
-#define DEV
-#ifndef DEV
+#define TWO_THREE_FOUR_TREE
+#ifndef TWO_THREE_FOUR_TREE
 	if (isRed(node->getRchild()) && isRed(node->getLchild()))
 	{
 		flipColors(node);
@@ -161,7 +171,7 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	if (isRed(node->getLchild()) && isRed(node->getLchild()->getLchild())) {
 		node = rotateRight(node);
 	}
-#ifdef DEV
+#ifdef TWO_THREE_FOUR_TREE
 	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
 		flipColors(node);
 	}
@@ -197,7 +207,7 @@ Node *RedBlackTree::deletemax(Node *h) {
 	}
 
 	if (!isRed(h->getRchild()) && !isRed(h->getRchild()->getLchild())) {
-		h = moveRedRight(h);
+		h = moveRedToRight(h);
 	}
 
 	//-------------------------------------------
@@ -215,7 +225,7 @@ Node *RedBlackTree::deletemin(Node *h) {
 
 	if (!isRed(h->getLchild()) &&
 	    !isRed(h->getLchild()->getLchild())) {
-		h = moveRedLeft(h);
+		h = moveRedToLeft(h);
 	}
 	h->setLchild(deletemin(h->getLchild()));
 	return fixup(h);
@@ -249,7 +259,7 @@ void RedBlackTree::del(Key k) {
 }
 
 /**
- * @brief
+ * @brief 注意保持h或者h其中一个孩子为红色
  * @param h
  * @param k
  * @return
@@ -258,7 +268,7 @@ Node *RedBlackTree::del(Node *h, Key k) {
 	int cmp = isEqualTo(k, h->getKey());
 	if (LESS == cmp) {
 		if (!isRed(h->getLchild()) && !isRed(h->getLchild()->getLchild())) {
-			h = moveRedLeft(h);
+			h = moveRedToLeft(h);
 		}
 		h->setLchild(del(h->getLchild(), k));
 	} else {
@@ -270,7 +280,7 @@ Node *RedBlackTree::del(Node *h, Key k) {
 			return nullptr;
 		}
 		if (!isRed(h->getRchild()) && !isRed(h->getRchild()->getLchild())) {
-			h = moveRedRight(h);
+			h = moveRedToRight(h);
 		}
 
 		if (EQUAL == cmp) {
