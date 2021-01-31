@@ -4,6 +4,118 @@
 
 #include "redblacktree.h"
 
+/**
+ * @brief
+ * @param val
+ * @param col
+ */
+Node::Node(Key k, Value val, Color col) {
+	this->value = val;
+	this->color = col;
+	this->key = k;
+	this->lchild = this->rchild = nullptr;
+}
+
+
+bool isRed(Node *root) {
+	if (root == nullptr)
+		return false;
+	return root->color == Color::RED;
+}
+
+/**
+ * @brief 翻转颜色
+ * @param root
+ */
+void flipColors(Node *root) {
+	Node *nodes[3] = {root, root->lchild, root->rchild};
+
+	for (auto i : nodes) {
+		i->color = i->color ? Color::BLACK : Color::RED;
+	}
+}
+
+/**
+ * @brief 左旋
+ * @param root
+ * @return
+ */
+Node *rotateLeft(Node *root) {
+	auto x = root->rchild;
+	root->rchild = x->lchild;
+	x->lchild = root;
+	x->color = root->color;
+	root->color = Color::RED;
+	return x;
+}
+
+/**
+ * @brief 右旋
+ * @param root
+ * @return
+ */
+Node *rotateRight(Node *root) {
+	auto x = root->lchild;
+	root->lchild = x->rchild;
+	x->rchild = root;
+	x->color = root->color;
+	root->color = Color::RED;
+	return x;
+}
+
+Node *moveRedRight(Node *h) {
+	flipColors(h);
+	if (isRed(h->getLchild()->getLchild())) {
+		h = rotateRight(h);
+		flipColors(h);
+	}
+	return h;
+}
+
+Node *moveRedLeft(Node *h) {
+	flipColors(h);
+	if (isRed(h->getRchild()->getLchild())) {
+		h->setRchild(rotateRight(h->getRchild()));
+		h = rotateLeft(h);
+		flipColors(h);
+	}
+	return h;
+}
+
+int isEqualTo(Key k1, Key k2) {
+	if (k1 < k2) {
+		return -1;
+	} else if (k1 > k2) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * @brief to fix up the node to the standard llrb
+ * @param h
+ * @return
+ */
+Node *fixup(Node *h) {
+
+	if (isRed(h->getRchild())) {
+		h = rotateLeft(h);
+	}
+
+	if (isRed(h->getLchild()) &&
+	    isRed((h->getLchild()->getLchild()))) {
+		h = rotateRight(h);
+	}
+
+	if (isRed(h->getLchild()) &&
+	    isRed(h->getRchild())) {
+		flipColors(h);
+	}
+
+	return h;
+}
+
 Node *RedBlackTree::put(Key k, Value val) {
 	root = put(this->root, k, val);
 	root->setColor(Color::BLACK);
@@ -27,7 +139,8 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	}
 #define DEV
 #ifndef DEV
-	if (isRed(node->getRchild()) && isRed(node->getLchild())) {
+	if (isRed(node->getRchild()) && isRed(node->getLchild()))
+	{
 		flipColors(node);
 	}
 #endif
@@ -57,68 +170,53 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	return node;
 }
 
+
+void RedBlackTree::deletemin() {
+	root = deletemin(root);
+	root->setColor(Color::BLACK);
+}
+
+void RedBlackTree::deletemax() {
+	this->root = deletemax(this->root);
+	this->root->setColor(Color::BLACK);
+}
+
 /**
  * @brief
- * @param val
- * @param col
- */
-Node::Node(Key k, Value val, Color col) {
-	this->value = val;
-	this->color = col;
-	this->key = k;
-	this->lchild = this->rchild = nullptr;
-}
-
-bool isRed(Node *root) {
-	if (root == nullptr) return false;
-	return root->color == Color::RED;
-}
-
-/**
- * @brief 翻转颜色
- * @param root
- */
-void flipColors(Node *root) {
-	root->color = Color::RED;
-	root->lchild->color = Color::BLACK;
-	root->rchild->color = Color::BLACK;
-}
-
-/**
- * @brief 左旋
- * @param root
+ * @param h
  * @return
  */
-Node *rotateLeft(Node *root) {
-	auto x = root->rchild;
-	root->rchild = x->lchild;
-	x->lchild = root;
-	x->color = root->color;
-	root->color = Color::RED;
-	return x;
-}
-
-
-/**
- * @brief 右旋
- * @param root
- * @return
- */
-Node *rotateRight(Node *root) {
-	auto x = root->lchild;
-	root->lchild = x->rchild;
-	x->rchild = root;
-	x->color = root->color;
-	root->color = Color::RED;
-	return x;
-}
-
-int isEqualTo(Key k1, Key k2) {
-	if (k1 < k2) {
-		return -1;
-	} else if (k1 > k2) {
-		return 1;
-	} else {
-		return 0;
+Node *RedBlackTree::deletemax(Node *h) {
+	if (isRed(h->getLchild())) {
+		h = rotateRight(h);
 	}
+
+	if (!h->getRchild()) {
+		delete h;
+		return nullptr;
+	}
+
+	if (!isRed(h->getRchild()) && !isRed(h->getRchild()->getLchild())) {
+		h = moveRedRight(h);
+	}
+
+	//-------------------------------------------
+	// h.right = deletemax(h.right)
+	h->setRchild(deletemax(h->getRchild()));
+
+	return fixup(h);
+}
+
+Node *RedBlackTree::deletemin(Node *h) {
+	if (nullptr == h->getLchild()) {
+		delete h;
+		return nullptr;
+	}
+
+	if (!isRed(h->getLchild()) &&
+	    !isRed(h->getLchild()->getLchild())) {
+		h = moveRedLeft(h);
+	}
+	h->setLchild(deletemin(h->getLchild()));
+	return fixup(h);
 }

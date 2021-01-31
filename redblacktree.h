@@ -78,8 +78,16 @@ public:
 
 	Node *put(Key k, Value val);
 
+	void deletemin();
+
+	void deletemax();
+
 private:
 	Node *root;
+
+	Node *deletemin(Node *h);
+
+	Node *deletemax(Node *h);
 
 	Node *put(Node *node, Key k, Value val);
 };
