@@ -15,6 +15,10 @@ enum Color {
 	BLACK = 0, RED
 };
 
+enum STatus {
+	EQUAL = 0, LESS = -1, BIGGER = 1
+};
+
 int isEqualTo(Key k1, Key k2);
 
 class Node;
@@ -50,13 +54,15 @@ public:
 
 	Key getKey() const { return this->key; }
 
-	Node *getLchild() { return this->lchild; }
+	Node *getLchild() const { return this->lchild; }
 
-	Node *getRchild() { return this->rchild; }
+	Node *getRchild() const { return this->rchild; }
 
 	void setColor(Color col) { this->color = col; }
 
-	Color getColor() { return this->color; }
+	Color getColor() const { return this->color; }
+
+	void setKey(Key k) { this->key = k; }
 
 private:
 	Value value;
@@ -82,6 +88,12 @@ public:
 
 	void deletemax();
 
+	bool find(Key key, Value &val);
+
+	void del(Key k);
+
+	Key getminKey(Node *node);
+
 private:
 	Node *root;
 
@@ -89,7 +101,11 @@ private:
 
 	Node *deletemax(Node *h);
 
+	Node *find(Node *h, Key k);
+
 	Node *put(Node *node, Key k, Value val);
+
+	Node *del(Node *h, Key k);
 };
 
 

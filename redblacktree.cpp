@@ -84,11 +84,11 @@ Node *moveRedLeft(Node *h) {
 
 int isEqualTo(Key k1, Key k2) {
 	if (k1 < k2) {
-		return -1;
+		return LESS;
 	} else if (k1 > k2) {
-		return 1;
+		return BIGGER;
 	} else {
-		return 0;
+		return EQUAL;
 	}
 }
 
@@ -145,9 +145,9 @@ Node *RedBlackTree::put(Node *node, Key k, Value val) {
 	}
 #endif
 
-	if (isEqualTo(k, node->getKey()) == -1) {
+	if (isEqualTo(k, node->getKey()) == LESS) {
 		node->setLchild(put(node->getLchild(), k, val));
-	} else if (isEqualTo(k, node->getKey()) == 1) {
+	} else if (isEqualTo(k, node->getKey()) == BIGGER) {
 		node->setRchild(put(node->getRchild(), k, val));
 	} else {
 		node->setVal(val);
@@ -219,4 +219,75 @@ Node *RedBlackTree::deletemin(Node *h) {
 	}
 	h->setLchild(deletemin(h->getLchild()));
 	return fixup(h);
+}
+
+bool RedBlackTree::find(Key key, Value &val) {
+	Node *ans = find(this->root, key);
+	if (ans) {
+		val = ans->getVal();
+		return true;
+	} else
+		return false;
+}
+
+Node *RedBlackTree::find(Node *h, Key k) {
+	if (nullptr == h) {
+		return nullptr;
+	}
+	auto cmp = isEqualTo(k, h->getKey());
+	if (EQUAL == cmp) {
+		return h;
+	} else if (BIGGER == cmp) {
+		return find(h->getRchild(), k);
+	} else {
+		return find(h->getLchild(), k);
+	}
+}
+
+void RedBlackTree::del(Key k) {
+	del(this->root, k);
+}
+
+/**
+ * @brief
+ * @param h
+ * @param k
+ * @return
+ */
+Node *RedBlackTree::del(Node *h, Key k) {
+	int cmp = isEqualTo(k, h->getKey());
+	if (LESS == cmp) {
+		if (!isRed(h->getLchild()) && !isRed(h->getLchild()->getLchild())) {
+			h = moveRedLeft(h);
+		}
+		h->setLchild(del(h->getLchild(), k));
+	} else {
+		if (isRed(h->getLchild())) {
+			h = rotateRight(h);
+		}
+		if (EQUAL == cmp && (nullptr == h->getRchild())) {
+			delete h;
+			return nullptr;
+		}
+		if (!isRed(h->getRchild()) && !isRed(h->getRchild()->getLchild())) {
+			h = moveRedRight(h);
+		}
+
+		if (EQUAL == cmp) {
+			h->setKey(getminKey(h));
+			h->setVal(h->getRchild()->getVal());
+			h->setRchild(deletemin(h->getRchild()));
+		} else {
+			h->setRchild(del(h->getRchild(), k));
+		}
+	}
+	return fixup(h);
+}
+
+Key RedBlackTree::getminKey(Node *node) {
+	if (node->getLchild()) {
+		return getminKey(node->getLchild());
+	} else {
+		return node->getKey();
+	}
 }

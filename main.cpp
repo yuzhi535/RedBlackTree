@@ -8,6 +8,6 @@ int main() {
 	tree.put(1, 22);
 	tree.put(2, 22);
 	tree.put(3, 33);
-	tree.deletemax();
+	tree.del(25);
 	return 0;
 }
