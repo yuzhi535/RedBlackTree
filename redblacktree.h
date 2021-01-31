@@ -82,7 +82,7 @@ public:
 
 	~RedBlackTree() = default;
 
-	void put(Key k, Value val);
+	Node *put(Key k, Value val);
 
 	void deletemin();
 
