@@ -35,9 +35,13 @@
         - 简单的删除最大值节点： 那个最大值正好存在红色父节点的左孩子
         - 简单的删除最小值节点： 最小值节点恰好为红色
         - 难点（自己制造红色节点）
-            - 删除最大值节点: ![image-rotateRight](./images/deletemax1.png)
+            - 删除最大值节点:
+
+              ![image-rotateRight](./images/deletemax1.png)
               ![image-rotateRight](./images/deletemax2.png)
-            - 删除最小之节点: ![image-rotateLeft](./images/deletemin1.png)
+            - 删除最小之节点:
+
+              ![image-rotateLeft](./images/deletemin1.png)
               ![image-rotateLeft](./images/deletemin2.png)
             - 删除节点的原则： 当前节点或者孩子节点至少有一个为红色
             - 如果不满足上述原则
