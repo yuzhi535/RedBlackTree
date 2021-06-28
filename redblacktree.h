@@ -73,7 +73,6 @@ private:
 
 /**
  * @brief
- * @todo implement the deletion
  */
 class RedBlackTree {
 public:
